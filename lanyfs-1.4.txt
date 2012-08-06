@@ -3,7 +3,7 @@
 
 Munich University of Armed Forces                             D. Luedtke
 Faculty of Electrical                                      mail@danrl.de
-and Computer Engineering                                   July 17, 2012
+and Computer Engineering                                  August 6, 2012
 Dept. of Information Technology
 
 
@@ -54,7 +54,7 @@ Copyright Notice
 
 Luedtke                                                         [Page 1]
 
-Specification              Lanyard Filesystem                  July 2012
+Specification              Lanyard Filesystem                August 2012
 
 
 Table of Contents
@@ -65,13 +65,13 @@ Table of Contents
      1.3.  LanyFS, A Block-based Filesystem . . . . . . . . . . . . .  6
      1.4.  Filesystem Dynamics  . . . . . . . . . . . . . . . . . . .  8
        1.4.1.  Blocksize  . . . . . . . . . . . . . . . . . . . . . .  8
-       1.4.2.  Adress Length  . . . . . . . . . . . . . . . . . . . .  8
-       1.4.3.  Variables In This Document . . . . . . . . . . . . . .  9
+       1.4.2.  Address Length . . . . . . . . . . . . . . . . . . . .  9
+       1.4.3.  Variables In This Document . . . . . . . . . . . . . . 10
      1.5.  The Superblock . . . . . . . . . . . . . . . . . . . . . . 10
-     1.6.  The Chain Block  . . . . . . . . . . . . . . . . . . . . . 10
+     1.6.  The Chain Block  . . . . . . . . . . . . . . . . . . . . . 11
      1.7.  The Directory Block  . . . . . . . . . . . . . . . . . . . 12
      1.8.  The File Block . . . . . . . . . . . . . . . . . . . . . . 13
-     1.9.  The Extender Block . . . . . . . . . . . . . . . . . . . . 13
+     1.9.  The Extender Block . . . . . . . . . . . . . . . . . . . . 14
      1.10. The Data Block . . . . . . . . . . . . . . . . . . . . . . 16
      1.11. Example: A Simple LanyFS Installation  . . . . . . . . . . 16
    2.  Requirements . . . . . . . . . . . . . . . . . . . . . . . . . 18
@@ -80,108 +80,108 @@ Table of Contents
      2.3.  Virtual Filesystem . . . . . . . . . . . . . . . . . . . . 18
      2.4.  Endianness . . . . . . . . . . . . . . . . . . . . . . . . 18
      2.5.  Block Device . . . . . . . . . . . . . . . . . . . . . . . 18
-   3.  The Blocks In Detail . . . . . . . . . . . . . . . . . . . . . 19
-     3.1.  The Superblock . . . . . . . . . . . . . . . . . . . . . . 19
-       3.1.1.  Type . . . . . . . . . . . . . . . . . . . . . . . . . 20
-       3.1.2.  Write Counter  . . . . . . . . . . . . . . . . . . . . 20
-       3.1.3.  Magic  . . . . . . . . . . . . . . . . . . . . . . . . 20
-       3.1.4.  Version (major, minor) . . . . . . . . . . . . . . . . 20
-       3.1.5.  Blocksize (bsize)  . . . . . . . . . . . . . . . . . . 20
-       3.1.6.  Address Length (addrl) . . . . . . . . . . . . . . . . 20
-       3.1.7.  Root Directory (root dir)  . . . . . . . . . . . . . . 21
-       3.1.8.  Total Blocks . . . . . . . . . . . . . . . . . . . . . 21
-       3.1.9.  Free Head  . . . . . . . . . . . . . . . . . . . . . . 21
-       3.1.10. Free Tail  . . . . . . . . . . . . . . . . . . . . . . 21
-       3.1.11. Free Blocks  . . . . . . . . . . . . . . . . . . . . . 21
-       3.1.12. Created  . . . . . . . . . . . . . . . . . . . . . . . 21
-       3.1.13. Checked  . . . . . . . . . . . . . . . . . . . . . . . 21
-       3.1.14. Updated  . . . . . . . . . . . . . . . . . . . . . . . 22
-       3.1.15. Bad Blocks . . . . . . . . . . . . . . . . . . . . . . 22
-       3.1.16. Volume Label . . . . . . . . . . . . . . . . . . . . . 22
-     3.2.  The Chain Block  . . . . . . . . . . . . . . . . . . . . . 22
-       3.2.1.  Type . . . . . . . . . . . . . . . . . . . . . . . . . 22
-       3.2.2.  Write Counter  . . . . . . . . . . . . . . . . . . . . 22
-       3.2.3.  Next Chain Block (next)  . . . . . . . . . . . . . . . 23
-       3.2.4.  Block Address Stream . . . . . . . . . . . . . . . . . 23
-     3.3.  The Directory Block  . . . . . . . . . . . . . . . . . . . 23
-       3.3.1.  Type . . . . . . . . . . . . . . . . . . . . . . . . . 24
+   3.  The Blocks In Detail . . . . . . . . . . . . . . . . . . . . . 20
+     3.1.  The Superblock . . . . . . . . . . . . . . . . . . . . . . 20
+       3.1.1.  Type . . . . . . . . . . . . . . . . . . . . . . . . . 21
+       3.1.2.  Write Counter  . . . . . . . . . . . . . . . . . . . . 21
+       3.1.3.  Magic  . . . . . . . . . . . . . . . . . . . . . . . . 21
+       3.1.4.  Version (major, minor) . . . . . . . . . . . . . . . . 21
+       3.1.5.  Blocksize (bsize)  . . . . . . . . . . . . . . . . . . 21
+       3.1.6.  Address Length (addrl) . . . . . . . . . . . . . . . . 21
+       3.1.7.  Root Directory (root dir)  . . . . . . . . . . . . . . 22
+       3.1.8.  Total Blocks . . . . . . . . . . . . . . . . . . . . . 22
+       3.1.9.  Free Head  . . . . . . . . . . . . . . . . . . . . . . 22
+       3.1.10. Free Tail  . . . . . . . . . . . . . . . . . . . . . . 22
+       3.1.11. Free Blocks  . . . . . . . . . . . . . . . . . . . . . 22
+       3.1.12. Created  . . . . . . . . . . . . . . . . . . . . . . . 22
+       3.1.13. Checked  . . . . . . . . . . . . . . . . . . . . . . . 22
+       3.1.14. Updated  . . . . . . . . . . . . . . . . . . . . . . . 23
+       3.1.15. Bad Blocks . . . . . . . . . . . . . . . . . . . . . . 23
+       3.1.16. Volume Label . . . . . . . . . . . . . . . . . . . . . 23
+     3.2.  The Chain Block  . . . . . . . . . . . . . . . . . . . . . 23
+       3.2.1.  Type . . . . . . . . . . . . . . . . . . . . . . . . . 23
+       3.2.2.  Write Counter  . . . . . . . . . . . . . . . . . . . . 23
+       3.2.3.  Next Chain Block (next)  . . . . . . . . . . . . . . . 24
+       3.2.4.  Block Address Stream . . . . . . . . . . . . . . . . . 24
+     3.3.  The Directory Block  . . . . . . . . . . . . . . . . . . . 24
+       3.3.1.  Type . . . . . . . . . . . . . . . . . . . . . . . . . 25
 
 
 
 Luedtke                                                         [Page 2]
 
-Specification              Lanyard Filesystem                  July 2012
+Specification              Lanyard Filesystem                August 2012
 
 
-       3.3.2.  Write Counter  . . . . . . . . . . . . . . . . . . . . 24
-       3.3.3.  Binary Tree Left Node (btree left) . . . . . . . . . . 24
-       3.3.4.  Binary Tree Right Node (btree right) . . . . . . . . . 24
-       3.3.5.  Subtree  . . . . . . . . . . . . . . . . . . . . . . . 25
-       3.3.6.  Creation Time (created)  . . . . . . . . . . . . . . . 25
-       3.3.7.  Modification Time (modified) . . . . . . . . . . . . . 25
-       3.3.8.  Attributes (attr)  . . . . . . . . . . . . . . . . . . 25
-       3.3.9.  Directory Name . . . . . . . . . . . . . . . . . . . . 25
-     3.4.  The File Block . . . . . . . . . . . . . . . . . . . . . . 25
-       3.4.1.  Type . . . . . . . . . . . . . . . . . . . . . . . . . 26
-       3.4.2.  Write Counter  . . . . . . . . . . . . . . . . . . . . 26
-       3.4.3.  Binary Tree Left Node (btree left) . . . . . . . . . . 26
-       3.4.4.  Binary Tree Right Node (btree right) . . . . . . . . . 27
-       3.4.5.  Data . . . . . . . . . . . . . . . . . . . . . . . . . 27
-       3.4.6.  File Size  . . . . . . . . . . . . . . . . . . . . . . 27
-       3.4.7.  Creation Time (created)  . . . . . . . . . . . . . . . 27
-       3.4.8.  Modification Time (modified) . . . . . . . . . . . . . 27
-       3.4.9.  Attributes (attr)  . . . . . . . . . . . . . . . . . . 27
-       3.4.10. File Name  . . . . . . . . . . . . . . . . . . . . . . 27
-     3.5.  The Extender Block . . . . . . . . . . . . . . . . . . . . 27
-       3.5.1.  Type . . . . . . . . . . . . . . . . . . . . . . . . . 28
-       3.5.2.  Write Counter  . . . . . . . . . . . . . . . . . . . . 28
-       3.5.3.  Level  . . . . . . . . . . . . . . . . . . . . . . . . 28
-       3.5.4.  Block Address Stream . . . . . . . . . . . . . . . . . 28
-     3.6.  The Data Block . . . . . . . . . . . . . . . . . . . . . . 28
-       3.6.1.  Raw Data . . . . . . . . . . . . . . . . . . . . . . . 29
-     3.7.  Shared Data Fields . . . . . . . . . . . . . . . . . . . . 29
-       3.7.1.  Type . . . . . . . . . . . . . . . . . . . . . . . . . 29
-       3.7.2.  Write Counter  . . . . . . . . . . . . . . . . . . . . 30
-       3.7.3.  Long Mode Addresses  . . . . . . . . . . . . . . . . . 31
-       3.7.4.  Timestamps . . . . . . . . . . . . . . . . . . . . . . 31
-       3.7.5.  Labels And Names . . . . . . . . . . . . . . . . . . . 32
-       3.7.6.  Attributes . . . . . . . . . . . . . . . . . . . . . . 32
-   4.  Implementation Guide . . . . . . . . . . . . . . . . . . . . . 34
-     4.1.  Utility Operations . . . . . . . . . . . . . . . . . . . . 34
-       4.1.1.  Formatting A Device To LanyFS  . . . . . . . . . . . . 34
-     4.2.  Basic Operations . . . . . . . . . . . . . . . . . . . . . 35
-       4.2.1.  Detecting LanyFS . . . . . . . . . . . . . . . . . . . 35
-       4.2.2.  Mounting A LanyFS Device . . . . . . . . . . . . . . . 35
-     4.3.  Free Space Management  . . . . . . . . . . . . . . . . . . 36
-       4.3.1.  Creating A Chain Block . . . . . . . . . . . . . . . . 36
-       4.3.2.  Enslaving A Block  . . . . . . . . . . . . . . . . . . 36
-       4.3.3.  Releasing A Block  . . . . . . . . . . . . . . . . . . 37
-     4.4.  Creating Filesystem Objects  . . . . . . . . . . . . . . . 37
-       4.4.1.  Creating A Directory . . . . . . . . . . . . . . . . . 37
-       4.4.2.  Creating A File  . . . . . . . . . . . . . . . . . . . 37
-     4.5.  File Operations  . . . . . . . . . . . . . . . . . . . . . 38
-       4.5.1.  Creating An Extender Block . . . . . . . . . . . . . . 38
+       3.3.2.  Write Counter  . . . . . . . . . . . . . . . . . . . . 25
+       3.3.3.  Binary Tree Left Node (btree left) . . . . . . . . . . 25
+       3.3.4.  Binary Tree Right Node (btree right) . . . . . . . . . 25
+       3.3.5.  Subtree  . . . . . . . . . . . . . . . . . . . . . . . 26
+       3.3.6.  Creation Time (created)  . . . . . . . . . . . . . . . 26
+       3.3.7.  Modification Time (modified) . . . . . . . . . . . . . 26
+       3.3.8.  Attributes (attr)  . . . . . . . . . . . . . . . . . . 26
+       3.3.9.  Directory Name . . . . . . . . . . . . . . . . . . . . 26
+     3.4.  The File Block . . . . . . . . . . . . . . . . . . . . . . 26
+       3.4.1.  Type . . . . . . . . . . . . . . . . . . . . . . . . . 27
+       3.4.2.  Write Counter  . . . . . . . . . . . . . . . . . . . . 27
+       3.4.3.  Binary Tree Left Node (btree left) . . . . . . . . . . 27
+       3.4.4.  Binary Tree Right Node (btree right) . . . . . . . . . 28
+       3.4.5.  Data . . . . . . . . . . . . . . . . . . . . . . . . . 28
+       3.4.6.  File Size  . . . . . . . . . . . . . . . . . . . . . . 28
+       3.4.7.  Creation Time (created)  . . . . . . . . . . . . . . . 28
+       3.4.8.  Modification Time (modified) . . . . . . . . . . . . . 28
+       3.4.9.  Attributes (attr)  . . . . . . . . . . . . . . . . . . 28
+       3.4.10. File Name  . . . . . . . . . . . . . . . . . . . . . . 28
+     3.5.  The Extender Block . . . . . . . . . . . . . . . . . . . . 28
+       3.5.1.  Type . . . . . . . . . . . . . . . . . . . . . . . . . 29
+       3.5.2.  Write Counter  . . . . . . . . . . . . . . . . . . . . 29
+       3.5.3.  Level  . . . . . . . . . . . . . . . . . . . . . . . . 29
+       3.5.4.  Block Address Stream . . . . . . . . . . . . . . . . . 29
+     3.6.  The Data Block . . . . . . . . . . . . . . . . . . . . . . 29
+       3.6.1.  Raw Data . . . . . . . . . . . . . . . . . . . . . . . 30
+     3.7.  Shared Data Fields . . . . . . . . . . . . . . . . . . . . 30
+       3.7.1.  Type . . . . . . . . . . . . . . . . . . . . . . . . . 30
+       3.7.2.  Write Counter  . . . . . . . . . . . . . . . . . . . . 31
+       3.7.3.  Long Mode Addresses  . . . . . . . . . . . . . . . . . 32
+       3.7.4.  Timestamps . . . . . . . . . . . . . . . . . . . . . . 32
+       3.7.5.  Labels And Names . . . . . . . . . . . . . . . . . . . 33
+       3.7.6.  Attributes . . . . . . . . . . . . . . . . . . . . . . 33
+   4.  Implementation Guide . . . . . . . . . . . . . . . . . . . . . 35
+     4.1.  Utility Operations . . . . . . . . . . . . . . . . . . . . 35
+       4.1.1.  Formatting A Device To LanyFS  . . . . . . . . . . . . 35
+     4.2.  Basic Operations . . . . . . . . . . . . . . . . . . . . . 36
+       4.2.1.  Detecting LanyFS . . . . . . . . . . . . . . . . . . . 36
+       4.2.2.  Mounting A LanyFS Device . . . . . . . . . . . . . . . 36
+     4.3.  Free Space Management  . . . . . . . . . . . . . . . . . . 37
+       4.3.1.  Creating A Chain Block . . . . . . . . . . . . . . . . 37
+       4.3.2.  Enslaving A Block  . . . . . . . . . . . . . . . . . . 37
+       4.3.3.  Releasing A Block  . . . . . . . . . . . . . . . . . . 38
+     4.4.  Creating Filesystem Objects  . . . . . . . . . . . . . . . 38
+       4.4.1.  Creating A Directory . . . . . . . . . . . . . . . . . 38
+       4.4.2.  Creating A File  . . . . . . . . . . . . . . . . . . . 38
+     4.5.  File Operations  . . . . . . . . . . . . . . . . . . . . . 39
+       4.5.1.  Creating An Extender Block . . . . . . . . . . . . . . 39
 
 
 
 Luedtke                                                         [Page 3]
 
-Specification              Lanyard Filesystem                  July 2012
+Specification              Lanyard Filesystem                August 2012
 
 
-       4.5.2.  Growing A File . . . . . . . . . . . . . . . . . . . . 39
-       4.5.3.  Shrinking A File . . . . . . . . . . . . . . . . . . . 39
-       4.5.4.  Seeking Inside A File  . . . . . . . . . . . . . . . . 40
-     4.6.  Binary Tree Operations . . . . . . . . . . . . . . . . . . 40
-       4.6.1.  Finding A Node . . . . . . . . . . . . . . . . . . . . 41
-       4.6.2.  Adding A Node  . . . . . . . . . . . . . . . . . . . . 41
-       4.6.3.  Removing A Node  . . . . . . . . . . . . . . . . . . . 41
-         4.6.3.1.  Out-degree 0 (Node Is A Leaf)  . . . . . . . . . . 42
-         4.6.3.2.  Out-degree 1 (Node Has One Child)  . . . . . . . . 42
-         4.6.3.3.  Out-degree 2 (Node Has Two Children) . . . . . . . 42
-       4.6.4.  Renaming A Node  . . . . . . . . . . . . . . . . . . . 43
-       4.6.5.  Rebalancing  . . . . . . . . . . . . . . . . . . . . . 43
-   5.  References . . . . . . . . . . . . . . . . . . . . . . . . . . 44
+       4.5.2.  Growing A File . . . . . . . . . . . . . . . . . . . . 40
+       4.5.3.  Shrinking A File . . . . . . . . . . . . . . . . . . . 41
+       4.5.4.  Seeking Inside A File  . . . . . . . . . . . . . . . . 41
+     4.6.  Binary Tree Operations . . . . . . . . . . . . . . . . . . 42
+       4.6.1.  Finding A Node . . . . . . . . . . . . . . . . . . . . 42
+       4.6.2.  Adding A Node  . . . . . . . . . . . . . . . . . . . . 42
+       4.6.3.  Removing A Node  . . . . . . . . . . . . . . . . . . . 43
+         4.6.3.1.  Out-degree 0 (Node Is A Leaf)  . . . . . . . . . . 43
+         4.6.3.2.  Out-degree 1 (Node Has One Child)  . . . . . . . . 43
+         4.6.3.3.  Out-degree 2 (Node Has Two Children) . . . . . . . 43
+       4.6.4.  Renaming A Node  . . . . . . . . . . . . . . . . . . . 44
+       4.6.5.  Rebalancing  . . . . . . . . . . . . . . . . . . . . . 45
+   5.  References . . . . . . . . . . . . . . . . . . . . . . . . . . 46
 
 
 
@@ -222,22 +222,24 @@ Specification              Lanyard Filesystem                  July 2012
 
 Luedtke                                                         [Page 4]
 
-Specification              Lanyard Filesystem                  July 2012
+Specification              Lanyard Filesystem                August 2012
 
 
 1.  Introduction
 
+   The Lanyard Filesystem, in short "LanyFS", targets at highly mobile
+   removable storage devices used to transfer data in a heterogeneous
+   landscape of systems.
+
 1.1.  Design Principles
 
-   LanyFS targets at highly mobile removable storage devices used to
-   transfer data in a heterogeneous landscape of systems.  LanyFS was
-   designed with three principles in mind:
+   LanyFS was designed with three principles in mind:
 
    o  Simplicity.  LanyFS avoids any unnecessary complexity whithout
       loosing track of scalability.  It deals with the limited
       capabilities of embedded hardware as well as with the power of
-      state-of-the-art computing systems.  Simplicity is the key to not
-      loosing one party or another.
+      state-of-the-art computing systems.  Simplicity is seen as the key
+      to not loosing one party or another.
 
    o  Interoperability.  LanyFS was designed to unite those features
       which are common on most operating systems and not to accumulate
@@ -270,16 +272,16 @@ Specification              Lanyard Filesystem                  July 2012
 
    o  creation time,
 
-   o  modification time, and
-
 
 
 
 
 Luedtke                                                         [Page 5]
 
-Specification              Lanyard Filesystem                  July 2012
+Specification              Lanyard Filesystem                August 2012
 
+
+   o  modification time, and
 
    o  simple attributes, sometimes called flags.
 
@@ -303,12 +305,37 @@ Specification              Lanyard Filesystem                  July 2012
    In LanyFS all information, raw data, and meta data is stored in units
    called blocks.  Blocks can be of the same size or larger than an
    underlying devices sectors.  In literature and source files sectors
-   are often refered to as blocks too.  But we must distinct between
+   are often refered to as blocks, too.  But we must distinct between
    blocks (filesystem level) and sectors (hardware level) when it comes
    to LanyFS.  When we talk about blocks in this document, we mean those
    logical blocks LanyFS is made of and that are being mapped to
    physical sectors by something we call "block layer".  Figure 1
    depicts an example with 1024-byte blocks on 512-byte sectors.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Luedtke                                                         [Page 6]
+
+Specification              Lanyard Filesystem                August 2012
+
 
     +------------------------------------------------------------------+
     |                              userspace                           |
@@ -329,13 +356,6 @@ Specification              Lanyard Filesystem                  July 2012
     +----------+----------+----------+----------+--
 
           Figure 1: LanyFS' Position In An Operating System Stack
-
-
-
-Luedtke                                                         [Page 6]
-
-Specification              Lanyard Filesystem                  July 2012
-
 
    LanyFS neither groups blocks nor enforces special on-device locations
    for particular information apart from the superblock.  Blocks
@@ -365,12 +385,20 @@ Specification              Lanyard Filesystem                  July 2012
 
    Blocks are often related to each other, the superblock for example
    must provide an entry point into the filesystem called "root
+
+
+
+Luedtke                                                         [Page 7]
+
+Specification              Lanyard Filesystem                August 2012
+
+
    directory".  That is why the superblock contains a link to a
    directory block which happens to be the root directory.  Blocks that
    are logically connected to each other are either directly linked or
-   make use of intermediate blocks.  Intermediate blocks are extender
-   blocks and chain blocks, they contain addresses of other blocks and
-   eventually of the desired block.
+   make use of intermediate blocks.  Intermediate blocks are for example
+   extender blocks and chain blocks, they contain addresses of other
+   blocks and eventually of the desired block.
 
                    +--------------+     +--------------+
                    | x block      |  +->| y block      |
@@ -383,25 +411,17 @@ Specification              Lanyard Filesystem                  July 2012
    In Figure 2 block number x contains a field named 'other block' which
    links to block number y, thus creating a logical connection to the
    latter.  The value of field 'other block' is the block number it
-   points to is simply "y".
+   points to, here "y".
 
-
-
-
-Luedtke                                                         [Page 7]
-
-Specification              Lanyard Filesystem                  July 2012
-
-
-   Blocks contain all the data but proper linking between the blocks is
+   Blocks contain all the data, but proper linking between the blocks is
    what brings the filesystem to life.  In the big picture, every block
    is directly or indirectly linked to the superblock.
 
 1.4.  Filesystem Dynamics
 
    Two parameters, "blocksize" and "address length", allow LanyFS to
-   adopt to the underlying storage device in an efficient way.  These
-   parameters values depend on the later application as well as the
+   adapt to the underlying storage device in an efficient way.  These
+   parameters' values depend on the later application as well as the
    device's physical size.  They must be defined while formatting the
    drive and can not be changed afterwards.
 
@@ -421,7 +441,15 @@ Specification              Lanyard Filesystem                  July 2012
    on devices using Advanced Format (4k native, cp.  [IDEMA-AF]) the
    minimum blocksize is 4096 bytes.
 
-1.4.2.  Adress Length
+
+
+
+Luedtke                                                         [Page 8]
+
+Specification              Lanyard Filesystem                August 2012
+
+
+1.4.2.  Address Length
 
    The address length limits the number of addressable blocks.  While
    many filesystems have fixed length addresses, LanyFS can deal with
@@ -441,20 +469,12 @@ Specification              Lanyard Filesystem                  July 2012
 
    o  56-bit
 
-
-
-
-Luedtke                                                         [Page 8]
-
-Specification              Lanyard Filesystem                  July 2012
-
-
    o  64-bit
 
-   The shorter the address is, the less blocks can be addressed but the
-   more efficient chain and extender blocks store links to other blocks.
-   Table 1 shows the maximum addressable space by address length and
-   blocksize.
+   The shorter the address is, the less total blocks can be addressed
+   but the more efficient the chain and extender blocks store links to
+   other blocks.  Table 1 shows the maximum addressable space by address
+   length and blocksize.
 
      +----------------+----------+-----------+-----------+-----------+
      | Address Length | 512 Byte | 1024 Byte | 2048 Byte | 4096 Byte |
@@ -478,14 +498,21 @@ Specification              Lanyard Filesystem                  July 2012
 
             Table 1: Maximum Adressable Space By Address Length
 
+
+
+Luedtke                                                         [Page 9]
+
+Specification              Lanyard Filesystem                August 2012
+
+
 1.4.3.  Variables In This Document
 
-   Due its variable parameters, LanyFS is hard to explain without
+   Due to its variable parameters, LanyFS is hard to explain without
    introducing at least some variables, especially when it comes to
    figures depicting blocks or addresses.
 
    Let k be the number of 8-byte chunks a block of given size can be
-   divided into and let k be defined by:
+   divided into and let k be defined as:
 
                                blocksize [bytes]
                           k = -------------------
@@ -494,23 +521,14 @@ Specification              Lanyard Filesystem                  July 2012
    In the following k is used in figures as blocksize-dependent offset.
 
    Let j be the amount of addresses of a certain length that can be
-   stored in an extender block and let j be defined by:
-
-
-
-
-
-Luedtke                                                         [Page 9]
-
-Specification              Lanyard Filesystem                  July 2012
-
+   stored in an extender block and let j be defined as:
 
                           blocksize [bytes] - 3 bytes
                      j = -----------------------------
                              address length [bytes]
 
    Let m be the amount of addresses of a certain length that can be
-   stored in a chain block and let m be defined by:
+   stored in a chain block and let m be defined as:
 
                           blocksize [bytes] - 16 bytes
                      m = ------------------------------
@@ -526,12 +544,22 @@ Specification              Lanyard Filesystem                  July 2012
    changes when the filesystem is being written to and after filesystem
    checks.  It is always located at block number 0 and therefore starts
    at sector 0 of the underlying device.  Due to its fixed location and
-   its often changing contents, the superblock might be the most written
-   to block in LanyFS.  Future versions of LanyFS will solve this issue
-   by distributing copies of the superblock across the device.
+   its often changing contents, the superblock might be the block most
+   written to in LanyFS.  Future versions of LanyFS will solve this
+   issue by distributing copies of the superblock across the device.
 
    Probably the most important information stored in the superblock are
    the blocksize and the address length of the device.
+
+
+
+
+
+
+Luedtke                                                        [Page 10]
+
+Specification              Lanyard Filesystem                August 2012
+
 
 1.6.  The Chain Block
 
@@ -545,21 +573,8 @@ Specification              Lanyard Filesystem                  July 2012
    recycling longest time unused blocks first.  As a side effect, write-
    cycles are distributed more evenly throughout the device.
 
-   Let us have a look to an example to help us understand the
+   Let us have a look at an example to help us understand the
    bureaucracy of block chains:
-
-
-
-
-
-
-
-
-
-Luedtke                                                        [Page 10]
-
-Specification              Lanyard Filesystem                  July 2012
-
 
             +--------------+     +--------------+
             | 0 superblock |  +->| 2 chain      |
@@ -593,57 +608,70 @@ Specification              Lanyard Filesystem                  July 2012
    to m-1 free blocks, the second one to m free blocks and the third and
    last block does not point to other blocks.  The fields 'block 0' to
    'block m-1' are called "slots".  The total number of blocks the
-   filesystem driver can put to use is
-
-                           m - 1 + m + 3 = 2m + 2
-
-   blocks, because the chain blocks are considered to be free space too,
-   once all of their slots are go empty.
-
-   The next block the filesystem driver would "enslave" is the block
-   pointed to by field 'block 1' (slot 1) of the first chain block.  A
-   major change to the chain happens when block number m was enslaved
-   and the driver wants to put another block to use.  Then the chain
-   block at block number 2 gets enslaved itself and the superblock's
-   field 'free head' gets updated to value "1m+3".
-
-   Returning blocks to the free blocks pool is called "releasing" and
-   just works the other way round.  Back to our example, this means that
+   filesystem driver can put to use in this example is
 
 
 
 Luedtke                                                        [Page 11]
 
-Specification              Lanyard Filesystem                  July 2012
+Specification              Lanyard Filesystem                August 2012
 
 
+                           m - 1 + m + 3 = 2m + 2
+
+   blocks, because the chain blocks are considered to be free space too,
+   once all of their slots are empty.
+
+   The next block the filesystem driver would "enslave" is the block
+   pointed to by field 'block 1' (slot 1) of the first chain block.  A
+   major change to the chain happens when the block pointed to by slot m
+   was enslaved recently and the driver wants to put another block to
+   use.  Then the chain block at block number 2 gets enslaved by itself
+   and the superblock's field 'free head' gets updated to value "1m+3".
+
+   Returning blocks to the free blocks pool is called "releasing" and
+   works just the other way round.  Back to our example, this means that
    the next block the filesystem driver releases will be pointed to by
    field 'block 0' of chain block at block number 2m+4.  Blocks are
    always released into the last chain block of a chain.  Let us now
-   assume all slots of the last block are occupied and the filesystem
-   driver wants to release another block.  This new block becomes a
-   chain block itself, the former last block will link to it via its
-   field 'next' and the superblocks's field 'free tail' gets updated to
-   the new blocks address.
+   assume that all slots of the last block are occupied and the
+   filesystem driver wants to release another block.  This new block
+   becomes a chain block itself, the former last block will link to it
+   via its field 'next'.  The superblocks's field 'free tail' gets
+   updated to point to the new chain block which now happens to be the
+   last block in the chain.
 
 1.7.  The Directory Block
 
    A directory block contains the name and meta data of a directory but
    not its contents.  Every directory or file that is directly nested
    inside a directory has its own block (directory block or file block,
-   depending on its type).  These blocks are logically connectect to
-   each other via links eventually building a rooted binary tree.  The
-   root node of that binary tree is being pointed to by a field named
-   'subtree' of the containing directory's block.  Nevertheless the
+   depending on its type).  These blocks are logically connectet to each
+   other via links, eventually forming a rooted binary tree.  The root
+   node of this binary tree is being pointed to by a field named
+   'subtree' of the containing directory's block.  Nevertheless, the
    containing directory block may link to up to two further directory or
-   file blocks since it is part of the binary tree of its parent
+   file blocks since it is part of the subtree of its own parent
    directory.
 
    More about meta data can be found in Section 3.3 and Section 3.7.
 
    The only directory block which must not link to other blocks in this
-   way is the root directory.  It only has a subtree containing all the
+   way is the root directory.  It has a subtree only containing all the
    directories and files nested directly under the root directory.
+
+
+
+
+
+
+
+
+
+Luedtke                                                        [Page 12]
+
+Specification              Lanyard Filesystem                August 2012
+
 
                      +--------------+
                      | 42 directory |
@@ -665,26 +693,18 @@ Specification              Lanyard Filesystem                  July 2012
 
                        Figure 4: A Directory Subtree
 
-
-
-
-Luedtke                                                        [Page 12]
-
-Specification              Lanyard Filesystem                  July 2012
-
-
-   Figure 4 shows an example subtree of an directory containing three
+   Figure 4 shows an example subtree of a directory containing three
    other directories named "truth" on block number 42, "babel_fish" on
    block number 18, and "pikka_bird" on block number 33.  Block number
    42 links to block number 18 using its left link because the string
    "babel_fish" has a lower value than the string "truth".
-   Consequentially the right link points to block number 33 which is
+   Consequentially, the right link points to block number 33 which is
    associated to the string "pikka_bird".
 
    Note that both, block numbers 18 and 33, are numerically less than
    42.  Links in binary trees have nothing to do with the block numbers
    they link to, the trees linking is based on the directory and file
-   names.
+   names only.
 
    Binary trees and how they are meant to behave is explained in
    Section 4.6.
@@ -698,7 +718,16 @@ Specification              Lanyard Filesystem                  July 2012
    block.  Like directory blocks, file blocks may link to up to two
    further blocks in their binary tree.
 
-   More about meta data can be found in Section 3.3 and Section 3.7.
+   More about meta data can be found in Section 3.4 and Section 3.7.
+
+
+
+
+
+Luedtke                                                        [Page 13]
+
+Specification              Lanyard Filesystem                August 2012
+
 
 1.9.  The Extender Block
 
@@ -711,23 +740,7 @@ Specification              Lanyard Filesystem                  July 2012
    which turns out to be a good deal.  Using vertically linked extender
    blocks addressing a given offset in a file can be achieved fast and
    by reading only a few blocks.  Up to 255 levels of extender blocks
-   can be used in LanyFS.
-
-
-
-
-
-
-
-
-
-
-
-
-Luedtke                                                        [Page 13]
-
-Specification              Lanyard Filesystem                  July 2012
-
+   can be created in LanyFS for each file.
 
           +--------------+     +--------------+
           | file         |  +->| extender     |
@@ -741,15 +754,15 @@ Specification              Lanyard Filesystem                  July 2012
 
                 Figure 5: Extender Block Mapping File Data
 
-   Figure 5 shows an example.  The rather small file "mice.txt" is uses
-   up j blocks, the blocks addresses fit perfectly in one extender
-   block.  The field 'level' is set to 0 which indicates that all slots
-   of this extender block point directly to data blocks.  Reading byte x
-   is as easy as reading byte
+   Figure 5 shows an example.  The rather small file "mice.txt" uses up
+   j blocks, the blocks addresses fit perfectly in one extender block.
+   The field 'level' is set to 0 which indicates that all slots of this
+   extender block point directly to data blocks.  Reading byte x is as
+   easy as reading the byte at offset with
 
                         offset = x modulo blocksize
 
-   from the data block linked to by slot:
+   from the data block linked to by slot
 
                slot = x / (blocksize - (x modulo blocksize))
 
@@ -767,22 +780,9 @@ Specification              Lanyard Filesystem                  July 2012
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 Luedtke                                                        [Page 14]
 
-Specification              Lanyard Filesystem                  July 2012
+Specification              Lanyard Filesystem                August 2012
 
 
            +--------------+     +--------------+
@@ -809,7 +809,7 @@ Specification              Lanyard Filesystem                  July 2012
 
    Let us now have a look on a more complex example based on Figure 6.
    The file "humans.txt" has grown fast lately and its raw data can not
-   be mapped by a single extender block anymore.  The two level 0
+   be mapped by a single extender block anymore.  The two level-0
    extender blocks link to the data blocks containing the raw data and
    an upper level extender block of level 1 links to them.  Being the
    extender block with of the highest level, it is being pointed to by
@@ -821,7 +821,7 @@ Specification              Lanyard Filesystem                  July 2012
                  slot_level = x / (blocksize * (j ^ level)
 
    To find the slot that points to the correct level-0-extender block of
-   our byte x we substitute level with 1 and get:
+   our byte x we substitute level for 1 and get:
 
                      slot_1 = x / (blocksize * (j ^ 1))
 
@@ -838,7 +838,7 @@ Specification              Lanyard Filesystem                  July 2012
 
 Luedtke                                                        [Page 15]
 
-Specification              Lanyard Filesystem                  July 2012
+Specification              Lanyard Filesystem                August 2012
 
 
                         offset = x modulo blocksize
@@ -874,8 +874,8 @@ Specification              Lanyard Filesystem                  July 2012
 
                    Figure 7: Simple LanyFS Installation
 
-   Figure 7 shows the block device labeled "The Guide" consisting of
-   nine blocks, addressed by their block numbers 0 to 8.  A file named
+   Figure 7 shows a device labeled "The Guide", consisting of nine
+   blocks, addressed by their block numbers 0 to 8.  A file named
    "fish.txt" and a directory named "so_long" are stored in the root
    directory of the device.  The superblock is at block number 0, it has
    a field 'free head' and a field 'free tail' (last one not shown) that
@@ -894,7 +894,7 @@ Specification              Lanyard Filesystem                  July 2012
 
 Luedtke                                                        [Page 16]
 
-Specification              Lanyard Filesystem                  July 2012
+Specification              Lanyard Filesystem                August 2012
 
 
    "so_long" which is the left child of block number 2.  The extender
@@ -950,10 +950,12 @@ Specification              Lanyard Filesystem                  July 2012
 
 Luedtke                                                        [Page 17]
 
-Specification              Lanyard Filesystem                  July 2012
+Specification              Lanyard Filesystem                August 2012
 
 
 2.  Requirements
+
+   This section covers the requirements an implementation must meet.
 
 2.1.  Requirements Language
 
@@ -967,14 +969,15 @@ Specification              Lanyard Filesystem                  July 2012
    information (user id, group id), special file modes, and other
    metadata it might expect but LanyFS does not incorporate.
    Implementations are required to provide appropriate default values to
-   upper abstraction layers.  After mounting users should be able to
-   access and modify the stored data without further authorization.
+   possible upper abstraction layers.  After mounting a LanyFS-formatted
+   device, users should be able to access and modify the stored data
+   without further authorization.
 
 2.3.  Virtual Filesystem
 
    Files and directories are identified by their names and can be
-   adressed using paths.  Virtual filesystems interoperating with LanyFS
-   must address the stored data using filenames and paths.
+   adressed unique using paths.  Virtual filesystems interoperating with
+   LanyFS must address the stored data using filenames and paths.
 
 2.4.  Endianness
 
@@ -998,15 +1001,68 @@ Specification              Lanyard Filesystem                  July 2012
 
    Blocks must be at least 512 bytes in size, but should also be
    available in sizes of 1024 bytes, 2048 bytes, and 4096 bytes.
+
+
+
+Luedtke                                                        [Page 18]
+
+Specification              Lanyard Filesystem                August 2012
+
+
    Usually operating systems provide a proper abstraction known as block
    layer that handles various blocksizes and maps blocks to the
    appropriate physical sectors.
 
 
 
-Luedtke                                                        [Page 18]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Luedtke                                                        [Page 19]
 
-Specification              Lanyard Filesystem                  July 2012
+Specification              Lanyard Filesystem                August 2012
 
 
 3.  The Blocks In Detail
@@ -1060,9 +1116,9 @@ Specification              Lanyard Filesystem                  July 2012
 
 
 
-Luedtke                                                        [Page 19]
+Luedtke                                                        [Page 20]
 
-Specification              Lanyard Filesystem                  July 2012
+Specification              Lanyard Filesystem                August 2012
 
 
 3.1.1.  Type
@@ -1100,7 +1156,7 @@ Specification              Lanyard Filesystem                  July 2012
 
 3.1.6.  Address Length (addrl)
 
-   In field 'addrl' the lengths of block addresses in bytes is stored.
+   In field 'addrl' the length of block addresses in bytes is stored.
 
       0x01 for 8-bit addresses
 
@@ -1116,9 +1172,9 @@ Specification              Lanyard Filesystem                  July 2012
 
 
 
-Luedtke                                                        [Page 20]
+Luedtke                                                        [Page 21]
 
-Specification              Lanyard Filesystem                  July 2012
+Specification              Lanyard Filesystem                August 2012
 
 
       0x06 for 48-bit addresses
@@ -1136,8 +1192,8 @@ Specification              Lanyard Filesystem                  July 2012
 3.1.8.  Total Blocks
 
    Number of adressable blocks on the device.  Must not be higher than 2
-   to the power of 'addrl'.  Possible overhead at the end of a partition
-   or device must not be included.
+   to the power of 'addrl'.  Possible overhead at the end of a device
+   must not be included.
 
 3.1.9.  Free Head
 
@@ -1148,12 +1204,12 @@ Specification              Lanyard Filesystem                  July 2012
 
 3.1.10.  Free Tail
 
-   Consequently field 'free tail' contains the address of the last chain
-   block in the free blocks chain or null if the chain is empty.  This
-   field points to the same address as 'free head' if the chain consists
-   of exactly one chain block.  Chain blocks are explained in
-   Section 3.2.  Field contains an address in long mode format as
-   described in Section 3.7.3.
+   Field 'free tail' contains the address of the last chain block in the
+   free blocks chain or null if the chain is empty.  This field points
+   to the same address as 'free head' if the chain consists of exactly
+   one chain block.  Chain blocks are explained in Section 3.2.  Field
+   contains an address in long mode format as described in
+   Section 3.7.3.
 
 3.1.11.  Free Blocks
 
@@ -1172,9 +1228,9 @@ Specification              Lanyard Filesystem                  July 2012
 
 
 
-Luedtke                                                        [Page 21]
+Luedtke                                                        [Page 22]
 
-Specification              Lanyard Filesystem                  July 2012
+Specification              Lanyard Filesystem                August 2012
 
 
    details on timestamps.
@@ -1182,9 +1238,10 @@ Specification              Lanyard Filesystem                  July 2012
 3.1.14.  Updated
 
    Stores the date and time of last update of a superblock, regardless
-   of the change took place in memory or on the device.  Field write
-   counter is excepted to avoid race conditions in implementations.  See
-   Section 3.7.4 for details on timestamps.
+   of where the change took place.  In-memory and on-device changes are
+   treated likewise.  Field write counter is excepted to avoid race
+   conditions in implementations.  See Section 3.7.4 for details on
+   timestamps.
 
 3.1.15.  Bad Blocks
 
@@ -1227,10 +1284,9 @@ Specification              Lanyard Filesystem                  July 2012
 
 
 
-
-Luedtke                                                        [Page 22]
+Luedtke                                                        [Page 23]
 
-Specification              Lanyard Filesystem                  July 2012
+Specification              Lanyard Filesystem                August 2012
 
 
 3.2.3.  Next Chain Block (next)
@@ -1284,9 +1340,9 @@ Specification              Lanyard Filesystem                  July 2012
 
 
 
-Luedtke                                                        [Page 23]
+Luedtke                                                        [Page 24]
 
-Specification              Lanyard Filesystem                  July 2012
+Specification              Lanyard Filesystem                August 2012
 
 
    Byte    0       1       2       3       4       5       6       7
@@ -1340,9 +1396,9 @@ Specification              Lanyard Filesystem                  July 2012
 
 
 
-Luedtke                                                        [Page 24]
+Luedtke                                                        [Page 25]
 
-Specification              Lanyard Filesystem                  July 2012
+Specification              Lanyard Filesystem                August 2012
 
 
 3.3.5.  Subtree
@@ -1396,9 +1452,9 @@ Specification              Lanyard Filesystem                  July 2012
 
 
 
-Luedtke                                                        [Page 25]
+Luedtke                                                        [Page 26]
 
-Specification              Lanyard Filesystem                  July 2012
+Specification              Lanyard Filesystem                August 2012
 
 
    Byte    0       1       2       3       4       5       6       7
@@ -1452,9 +1508,9 @@ Specification              Lanyard Filesystem                  July 2012
 
 
 
-Luedtke                                                        [Page 26]
+Luedtke                                                        [Page 27]
 
-Specification              Lanyard Filesystem                  July 2012
+Specification              Lanyard Filesystem                August 2012
 
 
 3.4.4.  Binary Tree Right Node (btree right)
@@ -1508,9 +1564,9 @@ Specification              Lanyard Filesystem                  July 2012
 
 
 
-Luedtke                                                        [Page 27]
+Luedtke                                                        [Page 28]
 
-Specification              Lanyard Filesystem                  July 2012
+Specification              Lanyard Filesystem                August 2012
 
 
    Byte    0       1       2       3       4       5       6       7
@@ -1564,9 +1620,9 @@ Specification              Lanyard Filesystem                  July 2012
 
 
 
-Luedtke                                                        [Page 28]
+Luedtke                                                        [Page 29]
 
-Specification              Lanyard Filesystem                  July 2012
+Specification              Lanyard Filesystem                August 2012
 
 
    Byte    0       1       2       3       4       5       6       7
@@ -1584,7 +1640,8 @@ Specification              Lanyard Filesystem                  July 2012
 
 3.7.  Shared Data Fields
 
-   This section covers data fields that are used in more than one block.
+   Some data fields, like attributes and timestamps, are used in more
+   than one block.
 
 3.7.1.  Type
 
@@ -1619,10 +1676,9 @@ Specification              Lanyard Filesystem                  July 2012
 
 
 
-
-Luedtke                                                        [Page 29]
+Luedtke                                                        [Page 30]
 
-Specification              Lanyard Filesystem                  July 2012
+Specification              Lanyard Filesystem                August 2012
 
 
                  +------+-----------+------+------------+
@@ -1652,17 +1708,18 @@ Specification              Lanyard Filesystem                  July 2012
 3.7.2.  Write Counter
 
    Field 'write counter' is an unsigned integer typed counter that must
-   be increased every time the block gets written down to disk.
-   Whenever implementations write to the block, they must increases the
-   write counter by 1.  If the write counter is about to overflow, it
-   must be reset to 0.  Implementations are free to use the write
-   counter for implementation specific features as long as they preserve
-   its integrity.  Possible use cases are
+   be increased every time the block gets written to.  Whenever
+   implementations write to the block, they must increases the write
+   counter by 1.  If the write counter is about to overflow, it must be
+   reset to 0.  Implementations are free to use the write counter for
+   implementation specific features as long as they preserve its
+   integrity.  Possible use cases may be:
 
    o  Software wear leveling, e.g. on flash memory based devices without
       hardware wear leveling.
 
-   o  Scheduling filesystem checks every n writes to the superblock.
+   o  Scheduling filesystem checks every p writes to the superblock with
+      p being a value yet to be defined.
 
    o  Rewriting all data blocks associated to a file every time the
       write counter overflows, e.g. to refresh the bits in underlying
@@ -1675,19 +1732,18 @@ Specification              Lanyard Filesystem                  July 2012
 
 
 
-
-Luedtke                                                        [Page 30]
+Luedtke                                                        [Page 31]
 
-Specification              Lanyard Filesystem                  July 2012
+Specification              Lanyard Filesystem                August 2012
 
 
 3.7.3.  Long Mode Addresses
 
    In blocks where space is not an issue, an address is stored in so
    called long address mode which always occupies 8 bytes.  Depending on
-   the address-length defined in the superblock only the right-most
-   bytes are used for storing the actual address, remaining bits must be
-   set to 0.  Interpreting the field as 64-bit little endian unsigned
+   the address-length defined in the superblock only the left-most bytes
+   are used for storing the actual address, remaining bits must be set
+   to 0.  Interpreting the field as 64-bit little endian unsigned
    integer is save and convenient.  Figure 18 shows the general idea and
    Figure 19 depicts an example.
 
@@ -1732,9 +1788,9 @@ Specification              Lanyard Filesystem                  July 2012
 
 
 
-Luedtke                                                        [Page 31]
+Luedtke                                                        [Page 32]
 
-Specification              Lanyard Filesystem                  July 2012
+Specification              Lanyard Filesystem                August 2012
 
 
       month: month of year (1 to 12)
@@ -1754,10 +1810,10 @@ Specification              Lanyard Filesystem                  July 2012
 
 3.7.5.  Labels And Names
 
-   Volume labels as well as file and directory names must be interpreted
-   as UTF-8 encoded character fields (strings), for UTF-8 see [RFC3629].
-   They are terminated by 0x00 and must not contain one of the following
-   characters:
+   Volume labels as well as directory and file names must be interpreted
+   as UTF-8 encoded character fields (strings), for more about UTF-8 see
+   [RFC3629].  They are terminated by 0x00 and must not contain one of
+   the following characters:
 
       / slash
 
@@ -1782,15 +1838,15 @@ Specification              Lanyard Filesystem                  July 2012
 3.7.6.  Attributes
 
    File and directory attributes are used to map upper-layer features,
-   like file modes or file attributes to LanyFS formatted devices.  They
-   are stored as 16-bit integer.  Implementations ignoring file
+   like file modes or file attributes, to LanyFS formatted devices.
+   They are stored in a 16-bit integer.  Implementations ignoring file
    attributes must at least preserve them.  Changing attributes should
 
 
 
-Luedtke                                                        [Page 32]
+Luedtke                                                        [Page 33]
 
-Specification              Lanyard Filesystem                  July 2012
+Specification              Lanyard Filesystem                August 2012
 
 
    not require further authorization.  Implementations may ask the user
@@ -1844,9 +1900,9 @@ Specification              Lanyard Filesystem                  July 2012
 
 
 
-Luedtke                                                        [Page 33]
+Luedtke                                                        [Page 34]
 
-Specification              Lanyard Filesystem                  July 2012
+Specification              Lanyard Filesystem                August 2012
 
 
 4.  Implementation Guide
@@ -1857,9 +1913,9 @@ Specification              Lanyard Filesystem                  July 2012
 
 4.1.  Utility Operations
 
-   Filesystem utilities are meant to help the user creating, configuring
-   and managing LanyFS.  They usually operate in userspace and require
-   some kind of authorization to use, e.g. a superuser account.
+   Filesystem utilities help the user creating, configuring and managing
+   LanyFS-formatted devices.  They usually operate in user space and
+   often require some kind of authorization, e.g. a superuser account.
 
 4.1.1.  Formatting A Device To LanyFS
 
@@ -1886,7 +1942,7 @@ Specification              Lanyard Filesystem                  July 2012
             Storage".
 
    Step 7   Write the superblock to the device for the first time and
-            remember to increase the write counter.
+            increase 'write counter'.
 
    Step 8   If bad blocks are an issue, create one or more chain blocks
             that point to the bad blocks.  Let field 'bad blocks' point
@@ -1900,9 +1956,9 @@ Specification              Lanyard Filesystem                  July 2012
 
 
 
-Luedtke                                                        [Page 34]
+Luedtke                                                        [Page 35]
 
-Specification              Lanyard Filesystem                  July 2012
+Specification              Lanyard Filesystem                August 2012
 
 
    Step 10  Create one or more chain blocks that point to remaining
@@ -1915,8 +1971,8 @@ Specification              Lanyard Filesystem                  July 2012
             Set field 'updated' to current timestamp.
 
    Step 12  Write the superblock to the device for the second time,
-            again increasing the write counter.  The write counter
-            should now read 0x0002.
+            again increasing 'write counter'.  The write counter should
+            now read 0x0200 little endian.
 
 4.2.  Basic Operations
 
@@ -1956,9 +2012,9 @@ Specification              Lanyard Filesystem                  July 2012
 
 
 
-Luedtke                                                        [Page 35]
+Luedtke                                                        [Page 36]
 
-Specification              Lanyard Filesystem                  July 2012
+Specification              Lanyard Filesystem                August 2012
 
 
 4.3.  Free Space Management
@@ -1993,7 +2049,7 @@ Specification              Lanyard Filesystem                  July 2012
    Step 2  Load chain block pointed to by 'free head'.
 
    Step 3  Return the address in the first occupied slot of loaded chain
-           block, set the corresponding slot to null and decrease 'free
+           block, set the corresponding slot to null, decrease 'free
            blocks' of the superblock beforehand.
 
    Step 4  If the chain block holds no occupied slots, enslave the chain
@@ -2004,17 +2060,17 @@ Specification              Lanyard Filesystem                  July 2012
 
            *  Otherwise only 'free head' is to be changed.
 
-   Step 5  Decrease 'free blocks' of the superblock by one and return
-           the old chain block's address.
+   Step 5  Decrease 'free blocks' of the superblock by 1 and return the
+           old chain block's address.
 
 
 
 
 
 
-Luedtke                                                        [Page 36]
+Luedtke                                                        [Page 37]
 
-Specification              Lanyard Filesystem                  July 2012
+Specification              Lanyard Filesystem                August 2012
 
 
 4.3.3.  Releasing A Block
@@ -2042,7 +2098,7 @@ Specification              Lanyard Filesystem                  July 2012
                  both, the previously loaded chain block's 'next'-field
                  and 'free tail', point to the new chain block.
 
-           *  Increase field 'free blocks' of the superblock by one.
+           *  Increase field 'free blocks' of the superblock by 1.
 
 4.4.  Creating Filesystem Objects
 
@@ -2068,9 +2124,9 @@ Specification              Lanyard Filesystem                  July 2012
 
 
 
-Luedtke                                                        [Page 37]
+Luedtke                                                        [Page 38]
 
-Specification              Lanyard Filesystem                  July 2012
+Specification              Lanyard Filesystem                August 2012
 
 
    Step 1  Enslave a new block as described in Section 4.3.2.
@@ -2094,7 +2150,7 @@ Specification              Lanyard Filesystem                  July 2012
    o  Let j be the number of slots of an extender block (cp.
       Section 1.4.3).
 
-   o  Let bsize be the blocksize as populated at mounting time.
+   o  Let bsize be the blocksize in bytes as populated at mounting time.
 
    o  Let level be the value of field 'level' of the at any time current
       extender block.
@@ -2102,11 +2158,11 @@ Specification              Lanyard Filesystem                  July 2012
    o  Let offset be an offset, either for seeking or for shrinking.
 
    o  Let iblock be the file-internal block number and let iblock be
-      defined by:
+      defined as:
 
          iblock = offset / (2 ^ bsize)
 
-   o  Let slot be the next slot to read and let slot be defined by:
+   o  Let slot be the next slot to read and let slot be defined as:
 
          slot = (iblock / (j ^ level)) % j
 
@@ -2124,9 +2180,9 @@ Specification              Lanyard Filesystem                  July 2012
 
 
 
-Luedtke                                                        [Page 38]
+Luedtke                                                        [Page 39]
 
-Specification              Lanyard Filesystem                  July 2012
+Specification              Lanyard Filesystem                August 2012
 
 
    Step 4  Set field 'level' if any level is given.
@@ -2135,23 +2191,24 @@ Specification              Lanyard Filesystem                  July 2012
 
 4.5.2.  Growing A File
 
-   Growing a file is as simple as enslaving a new data block and addig
-   it to the file.  To grow a file, it has to have an extender block, in
-   some situations this may not be the case already.  If field 'data' of
-   the corresponding file block does not point to an extender block,
-   create an empty extender block before calling a function implementing
-   the here described workflow.
+   Growing a file is as simple as enslaving a new data block and adding
+   it at the end of the file.  To grow a file, it has to have an
+   extender block, in some situations this may not be the case already.
+   If field 'data' of the corresponding file block does not point to an
+   extender block, create an empty extender block before calling a
+   function implementing the here described workflow.
 
    This workflow is best implementend using recursion.
 
    Step 1  Enslave a new data block as described in Section 4.3.2.
 
-   Step 2  Iterate backwards through all slots of the current extender.
+   Step 2  Iterate backwards through all slots of the current extender
+           block.
 
            *  If slot is occupied and level is null, set the previous
               slot to the data block's address.
 
-           *  Special case when there is no previous slot!
+           *  Special case when there is no previous slot:
 
               Step 2-1  Create a new extender block as described in
                         Section 4.5.1.
@@ -2172,24 +2229,30 @@ Specification              Lanyard Filesystem                  July 2012
               function call itself.  Set iblock to null afterwards and
               continue iterating.
 
+
+
+
+
+
+
+
+Luedtke                                                        [Page 40]
+
+Specification              Lanyard Filesystem                August 2012
+
+
 4.5.3.  Shrinking A File
 
    Files are shrinked by releasing all blocks after the block containing
    byte 'offset'.  To prevent unwanted data loss, iblock has to be
    increased by one before calling a function implementing this
-
-
-
-Luedtke                                                        [Page 39]
-
-Specification              Lanyard Filesystem                  July 2012
-
-
    workflow.
 
    This workflow is best implementend using recursion.
 
-   Step 1  Iterate through all slots of the current extender.
+   Step 1  Skip iblock blocks from the beginning of the file.
+
+   Step 2  Iterate through all slots of the current extender block.
 
            *  If slot is occupied and level is null, set the slot to
               null.
@@ -2198,10 +2261,10 @@ Specification              Lanyard Filesystem                  July 2012
               function call itself with the extender block pointed to by
               slot being the new search root.
 
-   Step 2  If necessary, clean up by removing empty extender blocks from
+   Step 3  If necessary, clean up by removing empty extender blocks from
            their parent extender blocks and releasing them.
 
-   Step 3  While only slot 0 of the top-level extender block is
+   Step 4  While only slot 0 of the top-level extender block is
            occupied, remove that extender block and let the address
            stored in slot 0 be the new top-level extender.
 
@@ -2209,7 +2272,7 @@ Specification              Lanyard Filesystem                  July 2012
 
    The seek algorithm finds the data block related to a file offset.
    Seeking from the start of the file to offset will return the data
-   block that contains byte 'offset'.
+   block that contains the byte at 'offset'.
 
    This workflow is best implementend using recursion.
 
@@ -2222,24 +2285,27 @@ Specification              Lanyard Filesystem                  July 2012
               with the extender block pointed to by slot being the new
               search root.
 
+
+
+
+
+
+
+
+Luedtke                                                        [Page 41]
+
+Specification              Lanyard Filesystem                August 2012
+
+
 4.6.  Binary Tree Operations
 
    LanyFS uses rooted binary trees to organize directories and files.
    Binary trees can be searched through quickly and most other
    operations (adding or removing nodes) on binary trees take only
-   little time.
+   little time, too.
 
    Although the field names in LanyFS often begin with 'btree...' they
-   are not be confused with b-tree, a special form of a binary tree.
-
-
-
-
-
-Luedtke                                                        [Page 40]
-
-Specification              Lanyard Filesystem                  July 2012
-
+   are not be confused with a b-tree, a special form of binary tree.
 
 4.6.1.  Finding A Node
 
@@ -2253,13 +2319,12 @@ Specification              Lanyard Filesystem                  July 2012
 
            *  If they are the same, return the block's address.
 
-           *  If name is less than name repeat search on block pointed
-              to by 'btree left'.  Return false in case 'btree left' is
-              null.
+           *  If name is less repeat search on block pointed to by
+              'btree left'.  Return false in case 'btree left' is null.
 
-           *  If name is greater than name repeat search on block
-              pointed to by 'btree right'.  Return false in case 'btree
-              right' is null.
+           *  If name is greater repeat search on block pointed to by
+              'btree right'.  Return false in case 'btree right' is
+              null.
 
 4.6.2.  Adding A Node
 
@@ -2275,27 +2340,28 @@ Specification              Lanyard Filesystem                  July 2012
 
            *  If they are the same, return false.
 
-           *  If name is less than name repeat search on block pointed
-              to by 'btree left'.  In case 'btree left' is null, let
-              'btree left' point to the new block's address.
+           *  If name is less repeat search on block pointed to by
+              'btree left'.  In case 'btree left' is null, let 'btree
+              left' point to the new block's address.
 
-           *  If name is greater than name repeat search on block
-              pointed to by 'btree right'.  In case 'btree right' is
-              null, let 'btree right' point to the new block's address.
+
+
+
+
+Luedtke                                                        [Page 42]
+
+Specification              Lanyard Filesystem                August 2012
+
+
+           *  If name is greater repeat search on block pointed to by
+              'btree right'.  In case 'btree right' is null, let 'btree
+              right' point to the new block's address.
 
 4.6.3.  Removing A Node
 
    This section explains how to remove a node from a binary tree.
 
    o  Let name be the name of a directory or file that is being removed.
-
-
-
-
-Luedtke                                                        [Page 41]
-
-Specification              Lanyard Filesystem                  July 2012
-
 
    There are different cases to be aware of when removing a node from a
    binary tree.  Removing a node can change the root node's address, if
@@ -2331,6 +2397,18 @@ Specification              Lanyard Filesystem                  July 2012
 
 4.6.3.3.  Out-degree 2 (Node Has Two Children)
 
+
+
+
+
+
+
+
+Luedtke                                                        [Page 43]
+
+Specification              Lanyard Filesystem                August 2012
+
+
    Step 1  Find the node as described in Section 4.6.1.
 
    Step 2  Find the left-most node in the right subtree of the node to
@@ -2345,13 +2423,6 @@ Specification              Lanyard Filesystem                  July 2012
 
            *  Set left-most's field 'btree right' to current node's
               'btree right'.
-
-
-
-Luedtke                                                        [Page 42]
-
-Specification              Lanyard Filesystem                  July 2012
-
 
    Step 4  Let 'btree left' of left-most point to current nodes left
            child.
@@ -2384,6 +2455,16 @@ Specification              Lanyard Filesystem                  July 2012
 
            *  Continue if no node is found.
 
+
+
+
+
+
+Luedtke                                                        [Page 44]
+
+Specification              Lanyard Filesystem                August 2012
+
+
    Step 2  Remove the node named name1 as described in Section 4.6.3.
 
    Step 3  Rename the node by updating the corresponding directory or
@@ -2404,9 +2485,40 @@ Specification              Lanyard Filesystem                  July 2012
 
 
 
-Luedtke                                                        [Page 43]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Luedtke                                                        [Page 45]
 
-Specification              Lanyard Filesystem                  July 2012
+Specification              Lanyard Filesystem                August 2012
 
 
 5.  References
@@ -2460,5 +2572,5 @@ Specification              Lanyard Filesystem                  July 2012
 
 
 
-Luedtke                                                        [Page 44]
+Luedtke                                                        [Page 46]
 
