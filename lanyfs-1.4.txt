@@ -3,7 +3,7 @@
 
 Munich University of Armed Forces                             D. Luedtke
 Faculty of Electrical                                      mail@danrl.de
-and Computer Engineering                                  August 6, 2012
+and Computer Engineering                                  August 8, 2012
 Dept. of Information Technology
 
 
@@ -660,8 +660,8 @@ Specification              Lanyard Filesystem                August 2012
    way is the root directory.  It has a subtree only containing all the
    directories and files nested directly under the root directory.
 
-
-
+   Although the field names in LanyFS often begin with 'btree...' they
+   are not be confused with a b-tree, a special form of binary tree.
 
 
 
@@ -2304,9 +2304,6 @@ Specification              Lanyard Filesystem                August 2012
    operations (adding or removing nodes) on binary trees take only
    little time, too.
 
-   Although the field names in LanyFS often begin with 'btree...' they
-   are not be confused with a b-tree, a special form of binary tree.
-
 4.6.1.  Finding A Node
 
    This section explains how to find a node in a binary tree.
@@ -2344,6 +2341,9 @@ Specification              Lanyard Filesystem                August 2012
               'btree left'.  In case 'btree left' is null, let 'btree
               left' point to the new block's address.
 
+           *  If name is greater repeat search on block pointed to by
+              'btree right'.  In case 'btree right' is null, let 'btree
+              right' point to the new block's address.
 
 
 
@@ -2352,10 +2352,6 @@ Luedtke                                                        [Page 42]
 
 Specification              Lanyard Filesystem                August 2012
 
-
-           *  If name is greater repeat search on block pointed to by
-              'btree right'.  In case 'btree right' is null, let 'btree
-              right' point to the new block's address.
 
 4.6.3.  Removing A Node
 
@@ -2397,6 +2393,10 @@ Specification              Lanyard Filesystem                August 2012
 
 4.6.3.3.  Out-degree 2 (Node Has Two Children)
 
+   Step 1  Find the node as described in Section 4.6.1.
+
+   Step 2  Find the left-most node in the right subtree of the node to
+           be removed.
 
 
 
@@ -2408,11 +2408,6 @@ Luedtke                                                        [Page 43]
 
 Specification              Lanyard Filesystem                August 2012
 
-
-   Step 1  Find the node as described in Section 4.6.1.
-
-   Step 2  Find the left-most node in the right subtree of the node to
-           be removed.
 
    Step 3  If left-most's parent does not equal current node:
 
@@ -2455,6 +2450,11 @@ Specification              Lanyard Filesystem                August 2012
 
            *  Continue if no node is found.
 
+   Step 2  Remove the node named name1 as described in Section 4.6.3.
+
+   Step 3  Rename the node by updating the corresponding directory or
+           file block.  After renaming the node is no longer identified
+           by name1 but by name2.
 
 
 
@@ -2465,12 +2465,6 @@ Luedtke                                                        [Page 44]
 Specification              Lanyard Filesystem                August 2012
 
 
-   Step 2  Remove the node named name1 as described in Section 4.6.3.
-
-   Step 3  Rename the node by updating the corresponding directory or
-           file block.  After renaming the node is no longer identified
-           by name1 but by name2.
-
    Step 4  Add the node named name2 as described in Section 4.6.2.
 
 4.6.5.  Rebalancing
@@ -2479,6 +2473,12 @@ Specification              Lanyard Filesystem                August 2012
    Implementations should use algorithms optimized for the target
    platform and capable of dealing with large unbalanced trees.  Later
    versions of LanyFS may require rebalancing.
+
+
+
+
+
+
 
 
 
