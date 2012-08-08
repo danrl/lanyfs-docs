@@ -646,7 +646,7 @@ Specification              Lanyard Filesystem                August 2012
    A directory block contains the name and meta data of a directory but
    not its contents.  Every directory or file that is directly nested
    inside a directory has its own block (directory block or file block,
-   depending on its type).  These blocks are logically connectet to each
+   depending on its type).  These blocks are logically connected to each
    other via links, eventually forming a rooted binary tree.  The root
    node of this binary tree is being pointed to by a field named
    'subtree' of the containing directory's block.  Nevertheless, the
@@ -1919,8 +1919,8 @@ Specification              Lanyard Filesystem                August 2012
 
 4.1.1.  Formatting A Device To LanyFS
 
-   Step 1   Set fields 'type' to 0xD0, 'write counter' to 0x0000, magic'
-            to 0x594e414c, 'major' to 0x01, and 'minor' to 0x04.
+   Step 1   Set fields 'type' to 0xD0, 'write counter' to 0x0000,
+            'magic' to 0x594e414c, 'major' to 0x01, and 'minor' to 0x04.
 
    Step 2   Calculate optimal blocksize and address length either
             automatically or from user input.  Set fields 'bsize' and
